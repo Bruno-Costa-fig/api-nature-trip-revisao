@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres
+    container_name: db_api-nature-trip
+    ports:
+      - "5430:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db-aula
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
