@@ -9,6 +9,10 @@ const { auth } = require('../middlewares/auth');
 // config rotas
 const router = Router();
 
+router.get('/', (req, res) => {
+    res.json({ message: 'API funcionando!' });
+});
+
 router.use('/login', authRoutes);
 router.use('/users', auth, userRoutes);
 

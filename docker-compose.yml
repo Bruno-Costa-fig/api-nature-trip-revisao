@@ -1,15 +1,43 @@
 services:
-  db:
-    image: postgres
-    container_name: db_api-nature-trip
+  api:
+    container_name: api-nature-trip
+    image: node:20-alpine
+    build:
+      context: .
     ports:
-      - "5430:5432"
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: db-aula
+      DB_DIALECT: postgres
+      JWT_SECRET: pi-nature-trip
+      PORT_API: 3000
+    command: ["sh", "-c", "rm -rf node_modules package-lock.json && npm install && npm run start:with-migrations"]
+    depends_on:
+      - db
+    networks:
+      - nature-trip
+
+  db:
+    container_name: db-nature-trip
+    image: postgres:16-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: db-aula
+    ports:
+      - "5430:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nature-trip
 
 volumes:
   postgres_data:
+
+networks:
+  nature-trip:
+    driver: bridge
