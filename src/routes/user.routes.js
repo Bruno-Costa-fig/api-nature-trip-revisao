@@ -2,18 +2,29 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models/User');
 const bcrypt = require('bcrypt');
+const PagedRedult = require('../classes/PagedResult');
 
 router.get('/', async (req, res) => {
   try {
+
+    const { page = 1, limit = 10 } = req.query;
+
+    const total = await User.count();
+    
     const usuarios = await User.findAll({
-      attributes: ['id', 'nome', 'email']
+      attributes: ['id', 'nome', 'email'],
+      order: [['id', 'ASC']],
+      limit: limit,
+      offset: (page - 1) * limit
     });
-    res.json(usuarios);
+
+    res.json(new PagedRedult(usuarios, page, limit, total));
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Erro no servidor');
   }
 });
+
 router.get('/:id', async (req, res) => {
   try {
     const id = req.params.id;
