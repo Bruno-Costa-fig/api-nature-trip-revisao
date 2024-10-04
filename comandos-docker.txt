@@ -1,0 +1,2 @@
+docker build -t brunocf2525/nome-projeto .
+docker push brunocf2525/api-nature-trip-aula
